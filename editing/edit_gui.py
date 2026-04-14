@@ -1034,10 +1034,25 @@ class GUI:
             if hasattr(self, 'animator') and self.animation_trans_bias is not None:
                 d_values = self.animator(self.gaussians.get_xyz, self.control_nodes, self.animation_trans_bias)
                 d_xyz, d_rotation, d_scaling, d_opacity, d_color = d_values['d_xyz'], d_values['d_rotation'], d_values['d_scaling'], d_values['d_opacity'], d_values['d_color']
-                d_rotation_bias = d_values['d_rotation_bias']
+                d_rotation_bias = d_values.get('d_rotation_bias', None)
+
+                # 兼容不同实现/状态：renderer 里 quaternion_multiply 需要 Tensor[...,4]
+                if d_rotation_bias is not None:
+                    if not torch.is_tensor(d_rotation_bias):
+                        print(f"[Warn] invalid d_rotation_bias type: {type(d_rotation_bias)}, disable it this frame.")
+                        d_rotation_bias = None
+                    elif d_rotation_bias.ndim == 1 and d_rotation_bias.shape[0] == 4:
+                        d_rotation_bias = d_rotation_bias[None].repeat(self.gaussians.get_xyz.shape[0], 1)
+                    elif d_rotation_bias.ndim != 2 or d_rotation_bias.shape[-1] != 4:
+                        print(f"[Warn] invalid d_rotation_bias shape: {tuple(d_rotation_bias.shape)}, disable it this frame.")
+                        d_rotation_bias = None
             gaussians = self.gaussians
-        
-        out = render(viewpoint_camera=cur_cam, pc=gaussians, pipe=self.pipe, bg_color=self.background, d_xyz=d_xyz, d_rotation=d_rotation, d_scaling=d_scaling, d_opacity=d_opacity, d_color=d_color, scale_const=vis_scale_const, d_rotation_bias=d_rotation_bias)
+
+        out = render(
+            viewpoint_camera=cur_cam, pc=gaussians, pipe=self.pipe, bg_color=self.background,
+            d_xyz=d_xyz, d_rotation=d_rotation, d_scaling=d_scaling, d_opacity=d_opacity, d_color=d_color,
+            scale_const=vis_scale_const, d_rotation_bias=d_rotation_bias
+        )
 
         if self.mode == "normal_dep":
             from utils.other_utils import depth2normal

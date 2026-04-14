@@ -32,8 +32,8 @@ device = "cuda:0" if torch.cuda.is_available() else "cpu"
 
 def parse():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--config", default="config/PixelHacker_sdvae_f8d4.yaml")
-    parser.add_argument("--weight", default="/data1/liushuzhi/pax/weight/ft_places2/diffusion_pytorch_model.bin") # [FIX] ft_places -> ft_places2
+    parser.add_argument("--config", default="/home/xyhugo/2D-SpaceEdit/inpainting/config/PixelHacker_sdvae_f8d4.yaml")
+    parser.add_argument("--weight", default="/home/xyhugo/2D-SpaceEdit/inpainting/weight/ft_places2/diffusion_pytorch_model.bin") # [FIX] ft_places -> ft_places2
     parser.add_argument("--image_dir", default="imgs")
     parser.add_argument("--mask_dir", default="masks")
     parser.add_argument("--output_dir", default="outputs")

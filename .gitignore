@@ -1,0 +1,16 @@
+# 忽略大型模型权重文件
+*.bin
+*.pth
+*.pt
+*.safetensors
+*.ckpt
+
+# 忽略大型依赖安装包
+*.whl
+
+# 忽略专门存放权重的文件夹（双重保险）
+checkpoints/
+preprocess/checkpoints/
+inpainting/weight/
+inpainting/vae/
+submodules/

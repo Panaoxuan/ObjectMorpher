@@ -94,7 +94,7 @@ def matrix_to_quaternion(matrix: torch.Tensor) -> torch.Tensor:
 
 
 class LapDeform(nn.Module):
-    def __init__(self, init_pcl, K=4, trajectory=None, node_radius=None):
+    def __init__(self, init_pcl, K=4, trajectory=None, node_radius=None, num_iter=3):
         super().__init__()
         self.K = K
         self.N = init_pcl.shape[0]
@@ -112,14 +112,36 @@ class LapDeform(nn.Module):
             self.generate_mask_init_pcl()
             radius = torch.linalg.norm(self.init_pcl_reduced.max(dim=0).values - self.init_pcl_reduced.min(dim=0).values) / 10 * 3
             print("Set ball query radius to %f" % radius.item())
-            self.arap_deformer = ARAPDeformer(self.init_pcl_reduced, radius=radius, K=30, point_mask=self.init_pcl_mask, trajectory=trajectory, node_radius=node_radius)
+            try:
+                self.arap_deformer = ARAPDeformer(
+                    self.init_pcl_reduced, radius=radius, K=30, point_mask=self.init_pcl_mask,
+                    trajectory=trajectory, node_radius=node_radius, num_iter=num_iter
+                )
+            except TypeError as e:
+                if "num_iter" in str(e):
+                    print("[LapDeform] ARAPDeformer does not support `num_iter`, fallback without it.")
+                    self.arap_deformer = ARAPDeformer(
+                        self.init_pcl_reduced, radius=radius, K=30, point_mask=self.init_pcl_mask,
+                        trajectory=trajectory, node_radius=node_radius
+                    )
+                else:
+                    raise
         else:
             radius = torch.linalg.norm(self.init_pcl.max(dim=0).values - self.init_pcl.min(dim=0).values) / 8
             print("Set ball query radius to %f" % radius.item())
-            self.arap_deformer = ARAPDeformer(init_pcl, radius=radius, K=16, trajectory=trajectory, node_radius=node_radius)
+            try:
+                self.arap_deformer = ARAPDeformer(
+                    init_pcl, radius=radius, K=16, trajectory=trajectory, node_radius=node_radius, num_iter=num_iter
+                )
+            except TypeError as e:
+                if "num_iter" in str(e):
+                    print("[LapDeform] ARAPDeformer does not support `num_iter`, fallback without it.")
+                    self.arap_deformer = ARAPDeformer(
+                        init_pcl, radius=radius, K=16, trajectory=trajectory, node_radius=node_radius
+                    )
+                else:
+                    raise
 
-        self.optimizer = torch.optim.Adam([self.arap_deformer.weight], lr=1e-3)
-        self.scheduler = torch.optim.lr_scheduler.StepLR(self.optimizer, step_size=100, gamma=0.99)
         self.optim_step = 0
 
     def generate_mask_init_pcl(self):
@@ -217,7 +239,7 @@ class LapDeform(nn.Module):
         if self.mask_control_points:
             deformed_p_all = self.init_pcl.clone()
             deformed_p_all[self.init_pcl_mask] = deformed_p
-            deformed_r_all = torch.tensor([[1,0,0,0]]).to(deformed_r.dtype).to(deformed_r.device).repeat(deformed_p_all.shape[0],1)
+            deformed_r_all = torch.tensor([[1.,0.,0.,0.]]).to(deformed_r.dtype).to(deformed_r.device).repeat(deformed_p_all.shape[0],1)
             deformed_r_all[self.init_pcl_mask] = deformed_r
             return deformed_p_all, deformed_r_all, deformed_s
         else:
