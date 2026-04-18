@@ -1,6 +1,10 @@
 <h1 align="center">ObjectMorpher: 3D-Aware Image Editing via Deformable 3DGS (CVPR 2026)</h1>
 
 <p align="center">
+  <img src="materials/web/teaser_web.png" alt="ObjectMorpher Teaser" width="95%"/>
+</p>
+
+<p align="center">
   <img src="materials/images/HKU.png" alt="The University of Hong Kong"/>
 </p>
 
@@ -14,11 +18,6 @@
   <a href="https://modelscope.cn/studios/YourName/ObjectMorpher-Composition">
     <img src="https://img.shields.io/badge/ModelScope-Demo-purple?style=for-the-badge" alt="ModelScope"/>
   </a>
-</p>
-
-<p align="center">
-  <img src="materials/images/result1.png" alt="Result 1" width="45%"/>
-  <img src="materials/images/result2.png" alt="Result 2" width="45%"/>
 </p>
 
 This is the official repository for the CVPR 2026 paper: **ObjectMorpher: 3D-Aware Image Editing via Deformable 3DGS**.
@@ -116,22 +115,14 @@ If you wish to reproduce our quantitative results or run offline inference, we p
 
 ## 📊 Results
 
-<div align="center">
-  <b>Original Image</b>
-  <b>ObjectMorpher Result 1</b>
-  <b>ObjectMorpher Result 2</b>
-</div>
+### ObjectMorpher-Web Showcase
 
 <p align="center">
-  <img src="materials/images/car1.png" alt="Original Car" width="30%"/>
-  <img src="materials/images/car1_back.png" alt="Car Back View Edit" width="30%"/>
-  <img src="materials/images/car1_opposite.png" alt="Car Opposite View Edit" width="30%"/>
+  <img src="materials/web/result_web.png" alt="ObjectMorpher-Web Results" width="95%"/>
 </p>
 
 <p align="center">
-  <img src="materials/images/mecha2.png" alt="Original Mecha" width="30%"/>
-  <img src="materials/images/mecha2_kick.png" alt="Mecha Kick Action" width="30%"/>
-  <img src="materials/images/mecha2_run.png" alt="Mecha Run Action" width="30%"/>
+  <a href="materials/web/presentation.mp4"><b>▶ Watch Demo Video (MP4)</b></a>
 </p>
 
 ## 📝 Citation
