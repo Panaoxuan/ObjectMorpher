@@ -12,10 +12,10 @@
   <a href="https://panaoxuan.github.io/ObjectMorpher-web/">
     <img src="https://img.shields.io/badge/Project-Website-blue?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Website"/>
   </a>
-  <a href="https://arxiv.org/abs/2507.05819">
+  <a href="https://arxiv.org/abs/2603.28152">
     <img src="https://img.shields.io/badge/arXiv-Paper-red?style=for-the-badge&logo=arxiv&logoColor=white" alt="ArXiv"/>
   </a>
-  <a href="https://modelscope.cn/studios/YourName/ObjectMorpher-Composition">
+  <a href="https://www.modelscope.cn/models/Xavianxxx/3DtoReal">
     <img src="https://img.shields.io/badge/ModelScope-Demo-purple?style=for-the-badge" alt="ModelScope"/>
   </a>
 </p>
